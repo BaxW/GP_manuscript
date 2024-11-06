@@ -1,0 +1,62 @@
+#configfile: "config/config.yaml"
+
+rule all:
+    input:
+       expand("cv/cv1/{sample}.tab", sample=range(50)),
+       expand("cv/cv1_ind/{sample}_ind.tab", sample=range(12)),
+       #expand("cv/cv1_sv/test_{sample}.tab", sample=range(50))
+
+
+rule cv_1:
+    output:
+        "cv/cv1/{sample}.tab"
+    resources:
+        partition="bluemoon", nodes=1, ntasks=1, cpus=30, mem="90G", time=1200
+    threads:
+        30
+    params:
+        reps=10
+    shell:
+        """
+        #spack load r
+
+        Rscript workflow/scripts/par_CV1.R {output} {params.reps} {resources.cpus}
+
+        """
+
+
+rule cv_1_ind:
+    output:
+        "cv/cv1_ind/{sample}_ind.tab"
+    resources:
+        partition="bluemoon", nodes=1, ntasks=1, cpus=30, mem="90G", time=1200
+    threads:
+        30
+    params:
+        reps=10
+    shell:
+        """
+        #spack load r
+
+        Rscript workflow/scripts/par_indv_CV1.R {output} {params.reps} {resources.cpus}
+
+        """
+
+
+
+
+rule cv_1_sv:
+    output:
+        "cv/cv1_sv/test_{sample}.tab"
+    resources:
+        partition="bluemoon", nodes=1, ntasks=1, cpus=30, mem="90G", time=1200
+    params:
+        reps=10,
+        dat="sv"
+    shell:
+        """
+        #spack load r
+
+        Rscript workflow/scripts/par_CV1.R {output} {params.reps} {resources.cpus} {params.dat}
+
+        """

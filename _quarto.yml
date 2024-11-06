@@ -1,0 +1,18 @@
+
+project: 
+  type: manuscript
+  
+manuscript:
+  article: main.qmd
+
+execute:
+  freeze: auto
+
+format:
+  html:
+    toc: true
+    comments:
+      hypothesis: true
+  docx: default
+  jats: default
+  agu-pdf: default
